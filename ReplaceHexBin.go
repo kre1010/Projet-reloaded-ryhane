@@ -18,22 +18,30 @@ func modifierTexte(texte string) string {
 		nombreStr := submatches[1]
 		typeConv := submatches[2]
 
-		// Conversion de la chaîne en entier
-		nombre, err := strconv.Atoi(nombreStr)
+		_, err := strconv.Atoi(nombreStr)
 		if err != nil {
 			return match
 		}
 
 		switch typeConv {
 		case "hex":
-			return fmt.Sprintf("0x%X", nombre)
+			nombre, err := strconv.ParseInt(nombreStr, 16, 64)
+			if err != nil {
+				return match
+			}
+			return strconv.FormatInt(nombre, 10)
+
 		case "bin":
-			return strconv.FormatInt(int64(nombre), 2)
+			nombre, err := strconv.ParseInt(nombreStr, 2, 64)
+			if err != nil {
+				return match
+			}
+			return strconv.FormatInt(nombre, 10)
+
 		default:
 			return match
 		}
 	})
-
 	return resultat
 }
 
